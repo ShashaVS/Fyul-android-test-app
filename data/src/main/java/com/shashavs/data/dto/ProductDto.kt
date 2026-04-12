@@ -13,7 +13,7 @@ data class ProductDto(
     val rating: Double,
     val stock: Int,
     val tags: List<String>,
-    val brand: String?,
+    val brand: String? = null,
     val sku: String,
     val weight: Int,
     val dimensions: DimensionsDto,

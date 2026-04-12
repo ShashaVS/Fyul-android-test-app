@@ -1,5 +1,9 @@
 package com.shashavs.data.dto
 
+import kotlinx.serialization.Serializable
+
+
+@Serializable
 data class ProductsResponseDto(
     val products: List<ProductDto>,
     val total: Int,

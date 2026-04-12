@@ -1,5 +1,8 @@
 package com.shashavs.data.dto
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ProductDto(
     val id: Int,
     val title: String,

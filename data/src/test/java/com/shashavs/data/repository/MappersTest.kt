@@ -1,140 +1,43 @@
 package com.shashavs.data.repository
 
-import com.shashavs.data.dto.*
-import com.shashavs.domain.model.*
+import com.shashavs.data.TestDto
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class MappersTest {
 
-    private val dimensionsDto = DimensionsDto(width = 10.0, height = 20.0, depth = 30.0)
-    private val dimensions = Dimensions(width = 10.0, height = 20.0, depth = 30.0)
-
-    private val reviewDto = ReviewDto(
-        rating = 5,
-        comment = "Great",
-        date = "2023-01-01",
-        reviewerName = "John",
-        reviewerEmail = "john@example.com"
-    )
-    private val review = Review(
-        rating = 5,
-        comment = "Great",
-        date = "2023-01-01",
-        reviewerName = "John",
-        reviewerEmail = "john@example.com"
-    )
-
-    private val metaDto = MetaDto(
-        createdAt = "2023-01-01",
-        updatedAt = "2023-01-02",
-        barcode = "123",
-        qrCode = "qr"
-    )
-    private val meta = Meta(
-        createdAt = "2023-01-01",
-        updatedAt = "2023-01-02",
-        barcode = "123",
-        qrCode = "qr"
-    )
-
-    private val productDto = ProductDto(
-        id = 1,
-        title = "Product",
-        description = "Desc",
-        category = "Cat",
-        price = 10.0,
-        discountPercentage = 1.0,
-        rating = 4.0,
-        stock = 10,
-        tags = emptyList(),
-        brand = "Brand",
-        sku = "SKU",
-        weight = 1,
-        dimensions = dimensionsDto,
-        warrantyInformation = "1y",
-        shippingInformation = "Ship",
-        availabilityStatus = "In Stock",
-        reviews = listOf(reviewDto),
-        returnPolicy = "30d",
-        minimumOrderQuantity = 1,
-        meta = metaDto,
-        images = emptyList(),
-        thumbnail = "thumb"
-    )
-
-    private val product = Product(
-        id = 1,
-        title = "Product",
-        description = "Desc",
-        category = "Cat",
-        price = 10.0,
-        discountPercentage = 1.0,
-        rating = 4.0,
-        stock = 10,
-        tags = emptyList(),
-        brand = "Brand",
-        sku = "SKU",
-        weight = 1,
-        dimensions = dimensions,
-        warrantyInformation = "1y",
-        shippingInformation = "Ship",
-        availabilityStatus = "In Stock",
-        reviews = listOf(review),
-        returnPolicy = "30d",
-        minimumOrderQuantity = 1,
-        meta = meta,
-        images = emptyList(),
-        thumbnail = "thumb"
-    )
-
     @Test
     fun `DimensionsDto toDomain`() {
-        val dto = dimensionsDto.copy()
-        val expected = dimensions.copy()
-
+        val dto = TestDto.dimensionsDto.copy()
+        val expected = TestDto.dimensions.copy()
         assertEquals(expected, dto.toDomain())
     }
 
     @Test
     fun `ReviewDto toDomain`() {
-        val dto = reviewDto.copy()
-        val expected = review.copy()
-
+        val dto = TestDto.reviewDto.copy()
+        val expected = TestDto.review.copy()
         assertEquals(expected, dto.toDomain())
     }
 
     @Test
     fun `MetaDto toDomain`() {
-        val dto = metaDto.copy()
-        val expected = meta.copy()
-
+        val dto = TestDto.metaDto.copy()
+        val expected = TestDto.meta.copy()
         assertEquals(expected, dto.toDomain())
     }
 
     @Test
     fun `ProductDto toDomain`() {
-        val dto = productDto.copy()
-        val expected = product.copy()
-
+        val dto = TestDto.productDto.copy()
+        val expected = TestDto.product.copy()
         assertEquals(expected, dto.toDomain())
     }
 
     @Test
     fun `ProductsResponseDto toDomain`() {
-        val dto = ProductsResponseDto(
-            products = listOf(productDto),
-            total = 100,
-            skip = 0,
-            limit = 10
-        )
-        val expected = ProductsPage(
-            items = listOf(product),
-            total = 100,
-            skip = 0,
-            limit = 10
-        )
-
+        val dto = TestDto.productsResponseDto.copy()
+        val expected = TestDto.productsPage.copy()
         assertEquals(expected, dto.toDomain())
     }
 }

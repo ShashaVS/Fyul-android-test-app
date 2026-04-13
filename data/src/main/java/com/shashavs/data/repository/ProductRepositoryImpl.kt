@@ -22,15 +22,15 @@ class ProductRepositoryImpl @Inject constructor(
                 if(body != null) {
                     Result.success(body.toDomain())
                 } else {
-                    Result.failure(Exception("Empty response"))
+                    Result.failure(AppError.UnknownError(msg = "Response body is null"))
                 }
             } else {
-                Result.failure(Exception("Server error: ${response.code()}"))
+                Result.failure(AppError.ServerError())
             }
         } catch (e: IOException) {
-            Result.failure(Exception("Check your internet connection", e))
+            Result.failure(AppError.NetworkError())
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(AppError.UnknownError(msg = e.message))
         }
     }
 }

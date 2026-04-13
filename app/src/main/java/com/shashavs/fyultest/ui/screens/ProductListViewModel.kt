@@ -1,8 +1,11 @@
 package com.shashavs.fyultest.ui.screens
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shashavs.data.repository.AppError
 import com.shashavs.domain.usecases.GetProductsUseCase
+import com.shashavs.fyultest.R
 import com.shashavs.fyultest.ui.models.ProductUI
 import com.shashavs.fyultest.ui.models.toUI
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +36,17 @@ class ProductListViewModel @Inject constructor(
                     _uiState.value = ProductListUI.Success(products)
                 }
                 .onFailure {
-                    _uiState.value = ProductListUI.Error(it.message ?: "Unknown error")
+                    when(it) {
+                        is AppError.NetworkError -> {
+                            _uiState.value = ProductListUI.Error(R.string.network_error)
+                        }
+                        is AppError.ServerError -> {
+                            _uiState.value = ProductListUI.Error(R.string.server_error)
+                        }
+                        is AppError.UnknownError -> {
+                            _uiState.value = ProductListUI.Error(R.string.unknown_error)
+                        }
+                    }
                 }
         }
     }
@@ -42,5 +55,5 @@ class ProductListViewModel @Inject constructor(
 sealed interface ProductListUI {
     object Loading : ProductListUI
     data class Success(val products: List<ProductUI>) : ProductListUI
-    data class Error(val message: String) : ProductListUI
+    data class Error(@StringRes val resId: Int) : ProductListUI
 }

@@ -15,9 +15,8 @@ class ProductRepositoryImpl @Inject constructor(
         skip: Int,
         limit: Int
     ): Result<ProductsPage> {
-        // TODO implement paging logic
         return try {
-            val response = productsService.getProducts()
+            val response = productsService.getProducts(skip, limit)
             if(response.isSuccessful) {
                 val body = response.body()
                 if(body != null) {

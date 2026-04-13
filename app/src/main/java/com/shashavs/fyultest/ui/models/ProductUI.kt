@@ -1,7 +1,9 @@
 package com.shashavs.fyultest.ui.models
 
+import androidx.compose.runtime.Immutable
 import com.shashavs.domain.model.Product
 
+@Immutable
 data class ProductUI(
     val id: Int,
     val title: String,

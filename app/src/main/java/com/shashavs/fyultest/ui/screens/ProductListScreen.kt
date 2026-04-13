@@ -52,7 +52,7 @@ fun ProductListScreen(
             LazyColumn(
                 modifier = modifier.fillMaxSize()
             ) {
-                items(state.products.size) { index ->
+                items(state.products.size, key = { state.products[it].id }) { index ->
                     ProductListItems(state.products[index])
                 }
             }

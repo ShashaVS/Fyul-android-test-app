@@ -1,6 +1,7 @@
 package com.shashavs.data.repository
 
 import com.shashavs.data.network.ProductsService
+import com.shashavs.domain.model.AppError
 import com.shashavs.domain.model.ProductsPage
 import com.shashavs.domain.repository.ProductRepository
 import java.io.IOException

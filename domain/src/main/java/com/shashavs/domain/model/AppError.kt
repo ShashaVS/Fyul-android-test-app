@@ -1,4 +1,4 @@
-package com.shashavs.data.repository
+package com.shashavs.domain.model
 
 sealed class AppError : Throwable() {
     class ServerError : AppError()

@@ -3,7 +3,7 @@ package com.shashavs.fyultest.ui.screens
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shashavs.data.repository.AppError
+import com.shashavs.domain.model.AppError
 import com.shashavs.domain.usecases.GetProductsUseCase
 import com.shashavs.fyultest.R
 import com.shashavs.fyultest.ui.models.ProductUI

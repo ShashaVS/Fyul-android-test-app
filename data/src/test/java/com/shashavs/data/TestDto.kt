@@ -100,7 +100,7 @@ object TestDto {
         limit = 30
     )
 
-    open val productsPage = ProductsPage(
+    val productsPage = ProductsPage(
         items = listOf(product),
         total = 100,
         skip = 0,

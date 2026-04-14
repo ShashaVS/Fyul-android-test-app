@@ -28,9 +28,21 @@ fun ProductListScreen(
     modifier: Modifier = Modifier,
     productListViewModel: ProductListViewModel = hiltViewModel(),
 ) {
-
     val uiState by productListViewModel.uiState.collectAsState()
 
+    ProductListContent(
+        uiState = uiState,
+        onRetry = { productListViewModel.loadProducts() },
+        modifier = modifier
+    )
+}
+
+@Composable
+fun ProductListContent(
+    uiState: ProductListUI,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     when (val state = uiState) {
         is ProductListUI.Loading -> {
             Column(
@@ -75,7 +87,7 @@ fun ProductListScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { productListViewModel.loadProducts() }
+                    onClick = onRetry
                 ) {
                     Text(stringResource(R.string.retry))
                 }

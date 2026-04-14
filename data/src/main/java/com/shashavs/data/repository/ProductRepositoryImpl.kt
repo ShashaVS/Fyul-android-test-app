@@ -4,18 +4,19 @@ import com.shashavs.data.network.ProductsService
 import com.shashavs.domain.model.AppError
 import com.shashavs.domain.model.ProductsPage
 import com.shashavs.domain.repository.ProductRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
 class ProductRepositoryImpl @Inject constructor(
     private val productsService: ProductsService
 ) : ProductRepository {
-
     override suspend fun getProducts(
         skip: Int,
         limit: Int
-    ): Result<ProductsPage> {
-        return try {
+    ): Result<ProductsPage> = withContext(Dispatchers.IO) {
+        try {
             val response = productsService.getProducts(skip, limit)
             if(response.isSuccessful) {
                 val body = response.body()

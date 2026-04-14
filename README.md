@@ -2,16 +2,6 @@
 
 A simple Android application that fetches and displays a list of products from the [DummyJSON API](https://dummyjson.com/products).
 
-## Task Requirements
-
-- Fetch data from `https://dummyjson.com/products`.
-- Display products in a list.
-- Each list item must show:
-  - Image
-  - Title
-  - Description
-- Technology stack: **Jetpack Compose**.
-
 ## Tech Stack & Architecture
 
 The project is built using following Android development practices:

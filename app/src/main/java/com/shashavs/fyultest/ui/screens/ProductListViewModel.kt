@@ -1,5 +1,6 @@
 package com.shashavs.fyultest.ui.screens
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,33 +29,74 @@ class ProductListViewModel @Inject constructor(
         .onStart { loadProducts() }
         .stateIn(viewModelScope, SharingStarted.Lazily, ProductListUI.Loading)
 
+    private var currentSkip = 0
+    private val pageSize = 30
+    private var isFetching = false
+
     fun loadProducts() {
+        if (isFetching) return
+
+        val currentState = _uiState.value
+        if (currentState is ProductListUI.Success && !currentState.canLoadMore) return
+
+        isFetching = true
         viewModelScope.launch {
-            _uiState.value = ProductListUI.Loading
-            getProductsUseCase(0, 30)
-                .onSuccess {
-                    val products = it.items.map { it.toUI() }
-                    _uiState.value = ProductListUI.Success(products)
+            try {
+                if (currentState is ProductListUI.Success) {
+                    _uiState.update { currentState.copy(isLoadingMore = true) }
+                } else {
+                    _uiState.value = ProductListUI.Loading
                 }
-                .onFailure {
-                    when(it) {
-                        is AppError.NetworkError -> {
-                            _uiState.value = ProductListUI.Error(R.string.network_error)
+
+                getProductsUseCase(currentSkip, pageSize)
+                    .onSuccess { page ->
+                        val newProducts = page.items.map { it.toUI() }
+                        _uiState.update { state ->
+                            val products = if (state is ProductListUI.Success) {
+                                state.products + newProducts
+                            } else {
+                                newProducts
+                            }
+
+                            ProductListUI.Success(
+                                products = products,
+                                isLoadingMore = false,
+                                canLoadMore = products.size < page.total
+                            )
                         }
-                        is AppError.ServerError -> {
-                            _uiState.value = ProductListUI.Error(R.string.server_error)
-                        }
-                        is AppError.UnknownError -> {
-                            _uiState.value = ProductListUI.Error(R.string.unknown_error)
+                        currentSkip += page.items.size
+                    }
+                    .onFailure { error ->
+                        _uiState.update { state ->
+                            if (state is ProductListUI.Success) {
+                                state.copy(isLoadingMore = false)
+                            } else {
+                                ProductListUI.Error(mapError(error))
+                            }
                         }
                     }
-                }
+            } finally {
+                isFetching = false
+            }
+        }
+    }
+
+    @StringRes
+    private fun mapError(error: Throwable): Int {
+        return when (error) {
+            is AppError.NetworkError -> R.string.network_error
+            is AppError.ServerError -> R.string.server_error
+            else -> R.string.unknown_error
         }
     }
 }
 
 sealed interface ProductListUI {
-    object Loading : ProductListUI
-    data class Success(val products: List<ProductUI>) : ProductListUI
+    data object Loading : ProductListUI
+    data class Success(
+        val products: List<ProductUI>,
+        val isLoadingMore: Boolean = false,
+        val canLoadMore: Boolean = true
+    ) : ProductListUI
     data class Error(@StringRes val resId: Int) : ProductListUI
 }
